@@ -1,11 +1,90 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/dashboard', function () {
+
+        $user = Auth::user();
+
+        $role = $user->role?->role_name;
+
+        return match ($role) {
+
+            'HR' => redirect()->route('hr.dashboard'),
+
+            'Manager' => redirect()->route('manager.dashboard'),
+
+            'Karyawan' => redirect()->route('employee.dashboard'),
+
+            default => abort(403),
+
+        };
+
+    })->name('dashboard');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | HR
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('role:HR')
+        ->prefix('hr')
+        ->group(function () {
+
+            Route::get('/dashboard', [
+                DashboardController::class,
+                'hr'
+            ])->name('hr.dashboard');
+
+        });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Manager
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('role:Manager')
+        ->prefix('manager')
+        ->group(function () {
+
+            Route::get('/dashboard', [
+                DashboardController::class,
+                'manager'
+            ])->name('manager.dashboard');
+
+        });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Karyawan
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('role:Karyawan')
+        ->prefix('employee')
+        ->group(function () {
+
+            Route::get('/dashboard', [
+                DashboardController::class,
+                'employee'
+            ])->name('employee.dashboard');
+
+        });
+
+});
+
+require __DIR__.'/profile.php';
+require __DIR__.'/auth.php';

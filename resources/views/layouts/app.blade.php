@@ -14,6 +14,8 @@
         @yield('title', 'HRMS')
     </title>
 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <style>
 
         :root {
@@ -53,6 +55,29 @@
             font-weight: bold;
         }
 
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .navbar-user span {
+            font-size: 14px;
+        }
+
+        .logout-button {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background: var(--secondary);
+        }
+
         .container {
             width: 90%;
             max-width: 1200px;
@@ -63,7 +88,7 @@
             background: var(--white);
             border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.08);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
         }
 
         .btn-primary {
@@ -95,9 +120,37 @@
             HRMS
         </div>
 
-        <div>
-            Human Resource Management System
-        </div>
+        @auth
+
+            <div class="navbar-user">
+
+                <span>
+                    {{ auth()->user()->name }}
+                </span>
+
+                <span>
+                    {{ auth()->user()->role?->role_name }}
+                </span>
+
+                <form
+                    method="POST"
+                    action="{{ route('logout') }}"
+                >
+
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="logout-button"
+                    >
+                        Logout
+                    </button>
+
+                </form>
+
+            </div>
+
+        @endauth
 
     </nav>
 

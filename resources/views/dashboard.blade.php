@@ -1,23 +1,17 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
 
-@section('title', 'Dashboard')
-
-@section('content')
-
-<div class="container">
-
-    <div class="card">
-
-        <h1>
-            Dashboard HRMS
-        </h1>
-
-        <p style="margin-top: 10px;">
-            Selamat datang di Human Resource Management System.
-        </p>
-
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    {{ __("You're logged in!") }}
+                </div>
+            </div>
+        </div>
     </div>
-
-</div>
-
-@endsection
+</x-app-layout>
