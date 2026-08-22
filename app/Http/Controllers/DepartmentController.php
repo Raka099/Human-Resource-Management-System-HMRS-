@@ -35,7 +35,7 @@ class DepartmentController extends Controller
         Department::create($validated);
 
         return redirect()
-            ->route('departements.index')
+            ->route('departments.index')
             ->with('success', 'Department berhasil ditambahkan.');
     }
 

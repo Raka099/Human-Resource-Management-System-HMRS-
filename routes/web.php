@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PositionController;
+use App\Http\Controllers\EmployeeController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,7 +29,6 @@ Route::middleware(['auth'])->group(function () {
 
             default => abort(403),
         };
-
     })->name('dashboard');
 
 
@@ -96,6 +96,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::resource('positions', PositionController::class)
             ->except(['show']);
+        Route::resource(
+            'employees',
+            EmployeeController::class
+        )->except(['show']);
     });
 });
 

@@ -70,6 +70,25 @@
 
     </div>
 
+    <div class="card">
+
+        <h2 style="color:#8B1E1E;">
+            Data Karyawan
+        </h2>
+
+        <p style="margin:10px 0;">
+            Kelola data karyawan perusahaan.
+        </p>
+
+        <a
+            href="{{ route('employees.index') }}"
+            class="btn-primary"
+        >
+            Kelola Karyawan
+        </a>
+
+    </div>
+
 </div>
 
 </div>
