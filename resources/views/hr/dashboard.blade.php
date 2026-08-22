@@ -89,6 +89,25 @@
 
     </div>
 
+    <div class="card">
+
+        <h2 style="color:#8B1E1E;">
+            Data Pelamar
+        </h2>
+
+        <p style="margin:10px 0;">
+            Kelola data dan proses seleksi pelamar.
+        </p>
+
+        <a
+            href="{{ route('applicants.index') }}"
+            class="btn-primary"
+        >
+            Kelola Pelamar
+        </a>
+
+    </div>
+
 </div>
 
 </div>

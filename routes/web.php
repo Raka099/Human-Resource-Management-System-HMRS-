@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ApplicantController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -96,10 +97,21 @@ Route::middleware(['auth'])->group(function () {
 
         Route::resource('positions', PositionController::class)
             ->except(['show']);
+            
         Route::resource(
             'employees',
             EmployeeController::class
         )->except(['show']);
+
+        Route::resource(
+            'applicants',
+            ApplicantController::class
+        )->except(['show']);
+
+        Route::patch(
+            '/applicants/{applicant}/status',
+            [ApplicantController::class, 'updateStatus']
+        )->name('applicants.update-status');
     });
 });
 
