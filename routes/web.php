@@ -3,6 +3,8 @@
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\PositionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,7 +27,6 @@ Route::middleware(['auth'])->group(function () {
             'Karyawan' => redirect()->route('employee.dashboard'),
 
             default => abort(403),
-
         };
 
     })->name('dashboard');
@@ -45,7 +46,6 @@ Route::middleware(['auth'])->group(function () {
                 DashboardController::class,
                 'hr'
             ])->name('hr.dashboard');
-
         });
 
 
@@ -63,7 +63,6 @@ Route::middleware(['auth'])->group(function () {
                 DashboardController::class,
                 'manager'
             ])->name('manager.dashboard');
-
         });
 
 
@@ -81,10 +80,24 @@ Route::middleware(['auth'])->group(function () {
                 DashboardController::class,
                 'employee'
             ])->name('employee.dashboard');
-
         });
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Department & Position
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('role:HR')->group(function () {
+
+        Route::resource('departments', DepartmentController::class)
+            ->except(['show']);
+
+        Route::resource('positions', PositionController::class)
+            ->except(['show']);
+    });
 });
 
-require __DIR__.'/profile.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/profile.php';
+require __DIR__ . '/auth.php';

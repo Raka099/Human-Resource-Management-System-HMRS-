@@ -23,6 +23,54 @@
         </p>
 
     </div>
+    <div
+    style="
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-top: 25px;
+    "
+>
+
+    <div class="card">
+
+        <h2 style="color: #8B1E1E;">
+            Department
+        </h2>
+
+        <p style="margin: 10px 0;">
+            Kelola data department perusahaan.
+        </p>
+
+        <a
+            href="{{ route('departments.index') }}"
+            class="btn-primary"
+        >
+            Kelola Department
+        </a>
+
+    </div>
+
+    <div class="card">
+
+        <h2 style="color: #8B1E1E;">
+            Position
+        </h2>
+
+        <p style="margin: 10px 0;">
+            Kelola data jabatan perusahaan.
+        </p>
+
+        <a
+            href="{{ route('positions.index') }}"
+            class="btn-primary"
+        >
+            Kelola Position
+        </a>
+
+    </div>
+
+</div>
 
 </div>
 
