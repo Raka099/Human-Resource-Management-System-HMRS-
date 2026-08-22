@@ -97,7 +97,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::resource('positions', PositionController::class)
             ->except(['show']);
-            
+
         Route::resource(
             'employees',
             EmployeeController::class
@@ -112,6 +112,16 @@ Route::middleware(['auth'])->group(function () {
             '/applicants/{applicant}/status',
             [ApplicantController::class, 'updateStatus']
         )->name('applicants.update-status');
+
+        Route::get(
+            '/applicants/{applicant}/generate-employee',
+            [ApplicantController::class, 'generateEmployee']
+        )->name('applicants.generate-employee');
+
+        Route::post(
+            '/applicants/{applicant}/generate-employee',
+            [ApplicantController::class, 'storeGeneratedEmployee']
+        )->name('applicants.store-generated-employee');
     });
 });
 

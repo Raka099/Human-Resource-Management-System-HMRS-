@@ -273,6 +273,18 @@
                                 >
 
                                     @csrf
+                                    @if($applicant->status === 'Diterima')
+                                        <a
+                                            href="{{ route(
+                                                'applicants.generate-employee',
+                                                $applicant
+                                            ) }}"
+                                            class="btn-primary"
+                                        >
+                                            Generate Karyawan
+                                        </a>
+
+                                    @endif
                                     @method('DELETE')
 
                                     <button
