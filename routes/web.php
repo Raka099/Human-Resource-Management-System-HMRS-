@@ -7,6 +7,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ApplicantController;
+use App\Http\Controllers\DocumentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -122,6 +123,11 @@ Route::middleware(['auth'])->group(function () {
             '/applicants/{applicant}/generate-employee',
             [ApplicantController::class, 'storeGeneratedEmployee']
         )->name('applicants.store-generated-employee');
+
+        Route::resource(
+            'employees.documents',
+            DocumentController::class
+        )->except(['show']);
     });
 });
 

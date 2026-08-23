@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Data Karyawan')
+@section('title', 'Dokumen Karyawan')
 
 @section('content')
 
@@ -16,26 +16,31 @@
         ">
 
             <div>
+
                 <h1 style="color:#8B1E1E;">
-                    Data Karyawan
+                    Dokumen Karyawan
                 </h1>
 
-                <p style="margin-top:5px;">
-                    Kelola data karyawan perusahaan.
+                <p>
+                    {{ $employee->employee_number }}
+                    -
+                    {{ $employee->full_name }}
                 </p>
+
             </div>
 
             <a
-                href="{{ route('employees.create') }}"
+                href="{{ route(
+                    'employees.documents.create',
+                    $employee
+                ) }}"
                 class="btn-primary"
             >
-                + Tambah Karyawan
+                + Upload Dokumen
             </a>
 
         </div>
 
-
-        {{-- Pesan sukses --}}
 
         @if(session('success'))
 
@@ -70,23 +75,15 @@
                         </th>
 
                         <th style="padding:12px;">
-                            NIK
+                            Nama Dokumen
                         </th>
 
                         <th style="padding:12px;">
-                            Nama
+                            Jenis
                         </th>
 
                         <th style="padding:12px;">
-                            Department
-                        </th>
-
-                        <th style="padding:12px;">
-                            Position
-                        </th>
-
-                        <th style="padding:12px;">
-                            Status
+                            File
                         </th>
 
                         <th style="padding:12px;">
@@ -97,110 +94,69 @@
 
                 </thead>
 
-
                 <tbody>
 
-                    @forelse($employees as $employee)
+                    @forelse($employee->documents as $document)
 
                         <tr style="
                             border-bottom:1px solid #ddd;
                         ">
 
-                            {{-- No --}}
-
                             <td style="padding:12px;">
                                 {{ $loop->iteration }}
                             </td>
 
-
-                            {{-- NIK --}}
-
                             <td style="padding:12px;">
-                                {{ $employee->employee_number }}
+                                {{ $document->document_name }}
                             </td>
 
-
-                            {{-- Nama --}}
-
                             <td style="padding:12px;">
-                                {{ $employee->full_name }}
+                                {{ $document->document_type }}
                             </td>
-
-
-                            {{-- Department --}}
 
                             <td style="padding:12px;">
 
-                                {{ $employee->department->department_name ?? '-' }}
+                                <a
+                                    href="{{ asset(
+                                        'storage/' .
+                                        $document->file_path
+                                    ) }}"
+                                    target="_blank"
+                                    style="color:#A8662A;"
+                                >
+                                    Lihat File
+                                </a>
 
                             </td>
-
-
-                            {{-- Position --}}
 
                             <td style="padding:12px;">
-
-                                {{ $employee->position->position_name ?? '-' }}
-
-                            </td>
-
-
-                            {{-- Status --}}
-
-                            <td style="padding:12px;">
-
-                                {{ $employee->employment_status }}
-
-                            </td>
-
-
-                            {{-- Aksi --}}
-
-                            <td style="
-                                padding:12px;
-                                white-space:nowrap;
-                            ">
-
-
-                                {{-- Edit --}}
 
                                 <a
                                     href="{{ route(
-                                        'employees.edit',
-                                        $employee
+                                        'employees.documents.edit',
+                                        [
+                                            $employee,
+                                            $document
+                                        ]
                                     ) }}"
                                     class="btn-primary"
                                 >
                                     Edit
                                 </a>
 
-
-                                {{-- Dokumen --}}
-
-                                <a
-                                    href="{{ route(
-                                        'employees.documents.index',
-                                        $employee
-                                    ) }}"
-                                    class="btn-primary"
-                                >
-                                    Dokumen
-                                </a>
-
-
-                                {{-- Hapus --}}
-
                                 <form
                                     action="{{ route(
-                                        'employees.destroy',
-                                        $employee
+                                        'employees.documents.destroy',
+                                        [
+                                            $employee,
+                                            $document
+                                        ]
                                     ) }}"
                                     method="POST"
                                     style="display:inline;"
                                 >
 
                                     @csrf
-
                                     @method('DELETE')
 
                                     <button
@@ -208,7 +164,7 @@
                                         class="btn-primary"
                                         onclick="
                                             return confirm(
-                                                'Hapus data karyawan ini?'
+                                                'Hapus dokumen ini?'
                                             )
                                         "
                                     >
@@ -221,19 +177,18 @@
 
                         </tr>
 
-
                     @empty
 
                         <tr>
 
                             <td
-                                colspan="7"
+                                colspan="5"
                                 style="
-                                    padding:20px;
                                     text-align:center;
+                                    padding:20px;
                                 "
                             >
-                                Belum ada data karyawan.
+                                Belum ada dokumen.
                             </td>
 
                         </tr>
@@ -243,6 +198,17 @@
                 </tbody>
 
             </table>
+
+        </div>
+
+        <div style="margin-top:20px;">
+
+            <a
+                href="{{ route('employees.index') }}"
+                class="btn-primary"
+            >
+                Kembali ke Karyawan
+            </a>
 
         </div>
 
