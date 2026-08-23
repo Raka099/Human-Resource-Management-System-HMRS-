@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Position;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -35,7 +39,7 @@ class EmployeeController extends Controller
         );
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'employee_number' => [
@@ -56,6 +60,7 @@ class EmployeeController extends Controller
                 'email',
                 'max:150',
                 'unique:employees,email',
+                'unique:users,email',
             ],
 
             'phone' => [
@@ -95,13 +100,82 @@ class EmployeeController extends Controller
             ],
         ]);
 
-        Employee::create($validated);
+
+        DB::transaction(function () use ($validated) {
+
+            /*
+        |--------------------------------------------------------------------------
+        | Ambil Role Karyawan
+        |--------------------------------------------------------------------------
+        */
+
+            $employeeRole = Role::where(
+                'role_name',
+                'Karyawan'
+            )->firstOrFail();
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | Buat User
+        |--------------------------------------------------------------------------
+        */
+
+            $user = User::create([
+                'name' => $validated['full_name'],
+                'email' => $validated['email'],
+                'password' => Hash::make('password'),
+                'role_id' => $employeeRole->id,
+            ]);
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | Buat Employee
+        |--------------------------------------------------------------------------
+        */
+
+            Employee::create([
+                'user_id' => $user->id,
+
+                'employee_number' =>
+                $validated['employee_number'],
+
+                'full_name' =>
+                $validated['full_name'],
+
+                'email' =>
+                $validated['email'],
+
+                'phone' =>
+                $validated['phone'] ?? null,
+
+                'address' =>
+                $validated['address'] ?? null,
+
+                'birth_date' =>
+                $validated['birth_date'] ?? null,
+
+                'join_date' =>
+                $validated['join_date'],
+
+                'department_id' =>
+                $validated['department_id'],
+
+                'position_id' =>
+                $validated['position_id'],
+
+                'employment_status' =>
+                $validated['employment_status'],
+            ]);
+        });
+
 
         return redirect()
             ->route('employees.index')
             ->with(
                 'success',
-                'Data karyawan berhasil ditambahkan.'
+                'Karyawan berhasil ditambahkan dan akun login berhasil dibuat.'
             );
     }
 

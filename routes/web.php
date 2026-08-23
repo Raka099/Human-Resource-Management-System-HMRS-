@@ -9,6 +9,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ContractController;
+use App\Http\Controllers\LeaveRequestController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -135,6 +136,25 @@ Route::middleware(['auth'])->group(function () {
             ContractController::class
         )->except(['show']);
     });
+
+    Route::middleware('role:Karyawan')
+        ->prefix('employee')
+        ->group(function () {
+
+            Route::get('/dashboard', [
+                DashboardController::class,
+                'employee'
+            ])->name('employee.dashboard');
+
+            Route::resource(
+                'leave-requests',
+                LeaveRequestController::class
+            )->only([
+                'index',
+                'create',
+                'store',
+            ]);
+        });
 });
 
 require __DIR__ . '/profile.php';

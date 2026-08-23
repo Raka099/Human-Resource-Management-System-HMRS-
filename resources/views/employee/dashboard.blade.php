@@ -24,6 +24,14 @@
 
     </div>
 
+        <a
+            href="{{ route('leave-requests.index') }}"
+            class="btn-primary"
+        >
+            Pengajuan Cuti
+        </a>
+
+
 </div>
 
 @endsection
