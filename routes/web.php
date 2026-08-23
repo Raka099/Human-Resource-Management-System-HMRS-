@@ -8,6 +8,7 @@ use App\Http\Controllers\PositionController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\ContractController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -127,6 +128,11 @@ Route::middleware(['auth'])->group(function () {
         Route::resource(
             'employees.documents',
             DocumentController::class
+        )->except(['show']);
+
+        Route::resource(
+            'employees.contracts',
+            ContractController::class
         )->except(['show']);
     });
 });

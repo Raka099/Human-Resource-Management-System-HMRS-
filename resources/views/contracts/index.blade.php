@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Data Karyawan')
+@section('title', 'Kontrak Karyawan')
 
 @section('content')
 
@@ -16,26 +16,31 @@
         ">
 
             <div>
+
                 <h1 style="color:#8B1E1E;">
-                    Data Karyawan
+                    Kontrak Karyawan
                 </h1>
 
-                <p style="margin-top:5px;">
-                    Kelola data karyawan perusahaan.
+                <p>
+                    {{ $employee->employee_number }}
+                    -
+                    {{ $employee->full_name }}
                 </p>
+
             </div>
 
             <a
-                href="{{ route('employees.create') }}"
+                href="{{ route(
+                    'employees.contracts.create',
+                    $employee
+                ) }}"
                 class="btn-primary"
             >
-                + Tambah Karyawan
+                + Upload Kontrak
             </a>
 
         </div>
 
-
-        {{-- Pesan sukses --}}
 
         @if(session('success'))
 
@@ -70,23 +75,15 @@
                         </th>
 
                         <th style="padding:12px;">
-                            NIK
+                            Nama Kontrak
                         </th>
 
                         <th style="padding:12px;">
-                            Nama
+                            Format
                         </th>
 
                         <th style="padding:12px;">
-                            Department
-                        </th>
-
-                        <th style="padding:12px;">
-                            Position
-                        </th>
-
-                        <th style="padding:12px;">
-                            Status
+                            File
                         </th>
 
                         <th style="padding:12px;">
@@ -97,122 +94,71 @@
 
                 </thead>
 
-
                 <tbody>
 
-                    @forelse($employees as $employee)
+                    @forelse($employee->contracts as $contract)
 
                         <tr style="
                             border-bottom:1px solid #ddd;
                         ">
 
-                            {{-- No --}}
-
                             <td style="padding:12px;">
                                 {{ $loop->iteration }}
                             </td>
 
-
-                            {{-- NIK --}}
-
                             <td style="padding:12px;">
-                                {{ $employee->employee_number }}
+                                {{ $contract->contract_name }}
                             </td>
 
-
-                            {{-- Nama --}}
-
                             <td style="padding:12px;">
-                                {{ $employee->full_name }}
+                                {{ strtoupper(
+                                    $contract->file_extension
+                                ) }}
                             </td>
-
-
-                            {{-- Department --}}
 
                             <td style="padding:12px;">
 
-                                {{ $employee->department->department_name ?? '-' }}
+                                <a
+                                    href="{{ asset(
+                                        'storage/' .
+                                        $contract->file_path
+                                    ) }}"
+                                    target="_blank"
+                                    style="color:#A8662A;"
+                                >
+                                    Lihat Kontrak
+                                </a>
 
                             </td>
-
-
-                            {{-- Position --}}
 
                             <td style="padding:12px;">
-
-                                {{ $employee->position->position_name ?? '-' }}
-
-                            </td>
-
-
-                            {{-- Status --}}
-
-                            <td style="padding:12px;">
-
-                                {{ $employee->employment_status }}
-
-                            </td>
-
-
-                            {{-- Aksi --}}
-
-                            <td style="
-                                padding:12px;
-                                white-space:nowrap;
-                            ">
-
-
-                                {{-- Edit --}}
 
                                 <a
                                     href="{{ route(
-                                        'employees.edit',
-                                        $employee
+                                        'employees.contracts.edit',
+                                        [
+                                            $employee,
+                                            $contract
+                                        ]
                                     ) }}"
                                     class="btn-primary"
                                 >
                                     Edit
                                 </a>
 
-
-                                {{-- Dokumen --}}
-
-                                <a
-                                    href="{{ route(
-                                        'employees.documents.index',
-                                        $employee
-                                    ) }}"
-                                    class="btn-primary"
-                                >
-                                    Dokumen
-                                </a>
-
-                                {{-- Kontrak --}}
-                                <a
-                                    href="{{ route(
-                                        'employees.contracts.index',
-                                        $employee
-                                    ) }}"
-                                    class="btn-primary"
-                                >
-                                    Kontrak
-                                </a>
-
-
-
-                                {{-- Hapus --}}
-
                                 <form
                                     action="{{ route(
-                                        'employees.destroy',
-                                        $employee
+                                        'employees.contracts.destroy',
+                                        [
+                                            $employee,
+                                            $contract
+                                        ]
                                     ) }}"
                                     method="POST"
                                     style="display:inline;"
                                 >
 
                                     @csrf
-
                                     @method('DELETE')
 
                                     <button
@@ -220,7 +166,7 @@
                                         class="btn-primary"
                                         onclick="
                                             return confirm(
-                                                'Hapus data karyawan ini?'
+                                                'Hapus file kontrak ini?'
                                             )
                                         "
                                     >
@@ -233,19 +179,18 @@
 
                         </tr>
 
-
                     @empty
 
                         <tr>
 
                             <td
-                                colspan="7"
+                                colspan="5"
                                 style="
-                                    padding:20px;
                                     text-align:center;
+                                    padding:20px;
                                 "
                             >
-                                Belum ada data karyawan.
+                                Belum ada file kontrak.
                             </td>
 
                         </tr>
@@ -255,6 +200,18 @@
                 </tbody>
 
             </table>
+
+        </div>
+
+
+        <div style="margin-top:20px;">
+
+            <a
+                href="{{ route('employees.index') }}"
+                class="btn-primary"
+            >
+                Kembali ke Karyawan
+            </a>
 
         </div>
 
