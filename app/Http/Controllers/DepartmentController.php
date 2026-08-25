@@ -13,12 +13,12 @@ class DepartmentController extends Controller
     {
         $departments = Department::latest()->get();
 
-        return view('departements.index', compact('departments'));
+        return view('hr.departements.index', compact('departments'));
     }
 
     public function create(): View
     {
-        return view('departements.create');
+        return view('hr.departements.create');
     }
 
     public function store(Request $request): RedirectResponse
@@ -41,7 +41,7 @@ class DepartmentController extends Controller
 
     public function edit(Department $department): View
     {
-        return view('departements.edit', compact('department'));
+        return view('hr.departements.edit', compact('department'));
     }
 
     public function update(

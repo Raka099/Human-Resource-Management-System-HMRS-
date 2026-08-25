@@ -16,7 +16,7 @@ class ContractController extends Controller
         $employee->load('contracts');
 
         return view(
-            'contracts.index',
+            'hr.contracts.index',
             compact('employee')
         );
     }
@@ -24,7 +24,7 @@ class ContractController extends Controller
     public function create(Employee $employee): View
     {
         return view(
-            'contracts.create',
+            'hr.contracts.create',
             compact('employee')
         );
     }

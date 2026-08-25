@@ -11,6 +11,8 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\PermissionRequestController;
+use App\Http\Controllers\OvertimeRequestController;
+use App\Http\Controllers\ManagerApprovalController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,20 +40,20 @@ Route::middleware(['auth'])->group(function () {
 
 
     /*
-    |--------------------------------------------------------------------------
-    | HR
-    |--------------------------------------------------------------------------
-    */
+    // |--------------------------------------------------------------------------
+    // | HR
+    // |--------------------------------------------------------------------------
+    // */
 
-    Route::middleware('role:HR')
-        ->prefix('hr')
-        ->group(function () {
+    // Route::middleware('role:HR')
+    //     ->prefix('hr')
+    //     ->group(function () {
 
-            Route::get('/dashboard', [
-                DashboardController::class,
-                'hr'
-            ])->name('hr.dashboard');
-        });
+    //         Route::get('/dashboard', [
+    //             DashboardController::class,
+    //             'hr'
+    //         ])->name('hr.dashboard');
+    //     });
 
 
     /*
@@ -64,12 +66,65 @@ Route::middleware(['auth'])->group(function () {
         ->prefix('manager')
         ->group(function () {
 
+            /*
+        |--------------------------------------------------------------------------
+        | Dashboard Manager
+        |--------------------------------------------------------------------------
+        */
+
             Route::get('/dashboard', [
                 DashboardController::class,
                 'manager'
             ])->name('manager.dashboard');
-        });
 
+
+            /*
+        |--------------------------------------------------------------------------
+        | Approval Pengajuan
+        |--------------------------------------------------------------------------
+        */
+
+            Route::get('/approvals', [
+                ManagerApprovalController::class,
+                'index'
+            ])->name('manager.approvals.index');
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | Approval Cuti
+        |--------------------------------------------------------------------------
+        */
+
+            Route::patch('/approvals/leave/{leaveRequest}', [
+                ManagerApprovalController::class,
+                'approveLeave'
+            ])->name('manager.approvals.leave');
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | Approval Izin
+        |--------------------------------------------------------------------------
+        */
+
+            Route::patch('/approvals/permission/{permissionRequest}', [
+                ManagerApprovalController::class,
+                'approvePermission'
+            ])->name('manager.approvals.permission');
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | Approval Lembur
+        |--------------------------------------------------------------------------
+        */
+
+            Route::patch('/approvals/overtime/{overtimeRequest}', [
+                ManagerApprovalController::class,
+                'approveOvertime'
+            ])->name('manager.approvals.overtime');
+        });
 
     /*
     |--------------------------------------------------------------------------
@@ -77,66 +132,56 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::middleware('role:Karyawan')
-        ->prefix('employee')
+    Route::middleware('role:HR')
+        ->prefix('hr')
         ->group(function () {
 
             Route::get('/dashboard', [
                 DashboardController::class,
-                'employee'
-            ])->name('employee.dashboard');
+                'hr'
+            ])->name('hr.dashboard');
+
+            Route::resource('departments', DepartmentController::class)
+                ->except(['show']);
+
+            Route::resource('positions', PositionController::class)
+                ->except(['show']);
+
+            Route::resource(
+                'employees',
+                EmployeeController::class
+            )->except(['show']);
+
+            Route::resource(
+                'applicants',
+                ApplicantController::class
+            )->except(['show']);
+
+            Route::patch(
+                '/applicants/{applicant}/status',
+                [ApplicantController::class, 'updateStatus']
+            )->name('applicants.update-status');
+
+            Route::get(
+                '/applicants/{applicant}/generate-employee',
+                [ApplicantController::class, 'generateEmployee']
+            )->name('applicants.generate-employee');
+
+            Route::post(
+                '/applicants/{applicant}/generate-employee',
+                [ApplicantController::class, 'storeGeneratedEmployee']
+            )->name('applicants.store-generated-employee');
+
+            Route::resource(
+                'employees.documents',
+                DocumentController::class
+            )->except(['show']);
+
+            Route::resource(
+                'employees.contracts',
+                ContractController::class
+            )->except(['show']);
         });
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Department & Position
-    |--------------------------------------------------------------------------
-    */
-
-    Route::middleware('role:HR')->group(function () {
-
-        Route::resource('departments', DepartmentController::class)
-            ->except(['show']);
-
-        Route::resource('positions', PositionController::class)
-            ->except(['show']);
-
-        Route::resource(
-            'employees',
-            EmployeeController::class
-        )->except(['show']);
-
-        Route::resource(
-            'applicants',
-            ApplicantController::class
-        )->except(['show']);
-
-        Route::patch(
-            '/applicants/{applicant}/status',
-            [ApplicantController::class, 'updateStatus']
-        )->name('applicants.update-status');
-
-        Route::get(
-            '/applicants/{applicant}/generate-employee',
-            [ApplicantController::class, 'generateEmployee']
-        )->name('applicants.generate-employee');
-
-        Route::post(
-            '/applicants/{applicant}/generate-employee',
-            [ApplicantController::class, 'storeGeneratedEmployee']
-        )->name('applicants.store-generated-employee');
-
-        Route::resource(
-            'employees.documents',
-            DocumentController::class
-        )->except(['show']);
-
-        Route::resource(
-            'employees.contracts',
-            ContractController::class
-        )->except(['show']);
-    });
 
     Route::middleware('role:Karyawan')
         ->prefix('employee')
@@ -161,15 +206,20 @@ Route::middleware(['auth'])->group(function () {
             |--------------------------------------------------------------------------
             */
 
-            Route::resource(
-                'leave-requests',
-                LeaveRequestController::class
-            )->only([
-                'index',
-                'create',
-                'store',
-            ]);
+            Route::get('/leave-requests', [
+                LeaveRequestController::class,
+                'index'
+            ])->name('employee.leave-requests.index');
 
+            Route::get('/leave-requests/create', [
+                LeaveRequestController::class,
+                'create'
+            ])->name('employee.leave-requests.create');
+
+            Route::post('/leave-requests', [
+                LeaveRequestController::class,
+                'store'
+            ])->name('employee.leave-requests.store');
 
             /*
             |--------------------------------------------------------------------------
@@ -193,6 +243,29 @@ Route::middleware(['auth'])->group(function () {
                 PermissionRequestController::class,
                 'store'
             ])->name('employee.permission-requests.store');
+
+            /*
+            |--------------------------------------------------------------------------
+            | Pengajuan Lembur
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get('/overtime-requests', [
+                OvertimeRequestController::class,
+                'index'
+            ])->name('employee.overtime-requests.index');
+
+
+            Route::get('/overtime-requests/create', [
+                OvertimeRequestController::class,
+                'create'
+            ])->name('employee.overtime-requests.create');
+
+
+            Route::post('/overtime-requests', [
+                OvertimeRequestController::class,
+                'store'
+            ])->name('employee.overtime-requests.store');
         });
 });
 

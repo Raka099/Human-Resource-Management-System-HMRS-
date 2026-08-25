@@ -71,4 +71,9 @@ class Employee extends Model
     {
         return $this->hasMany(PermissionRequest::class);
     }
+
+    public function overtimeRequests(): HasMany
+    {
+        return $this->hasMany(OvertimeRequest::class);
+    }
 }

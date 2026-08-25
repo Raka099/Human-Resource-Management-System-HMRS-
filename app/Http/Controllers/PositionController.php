@@ -13,12 +13,12 @@ class PositionController extends Controller
     {
         $positions = Position::latest()->get();
 
-        return view('positions.index', compact('positions'));
+        return view('hr.positions.index', compact('positions'));
     }
 
     public function create(): View
     {
-        return view('positions.create');
+        return view('hr.positions.create');
     }
 
     public function store(Request $request): RedirectResponse
@@ -41,7 +41,7 @@ class PositionController extends Controller
 
     public function edit(Position $position): View
     {
-        return view('positions.edit', compact('position'));
+        return view('hr.positions.edit', compact('position'));
     }
 
     public function update(

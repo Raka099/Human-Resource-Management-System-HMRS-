@@ -18,14 +18,14 @@ class ApplicantController extends Controller
         $applicants = Applicant::latest()->get();
 
         return view(
-            'applicants.index',
+            'hr.applicants.index',
             compact('applicants')
         );
     }
 
     public function create(): View
     {
-        return view('applicants.create');
+        return view('hr.applicants.create');
     }
 
     public function store(Request $request): RedirectResponse
@@ -88,7 +88,7 @@ class ApplicantController extends Controller
     public function edit(Applicant $applicant): View
     {
         return view(
-            'applicants.edit',
+            'hr.applicants.edit',
             compact('applicant')
         );
     }
