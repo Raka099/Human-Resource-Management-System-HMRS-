@@ -10,6 +10,7 @@ use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\PermissionRequestController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -141,10 +142,24 @@ Route::middleware(['auth'])->group(function () {
         ->prefix('employee')
         ->group(function () {
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | Dashboard
+            |--------------------------------------------------------------------------
+            */
+
             Route::get('/dashboard', [
                 DashboardController::class,
                 'employee'
             ])->name('employee.dashboard');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Pengajuan Cuti
+            |--------------------------------------------------------------------------
+            */
 
             Route::resource(
                 'leave-requests',
@@ -154,6 +169,30 @@ Route::middleware(['auth'])->group(function () {
                 'create',
                 'store',
             ]);
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Pengajuan Izin
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get('/permission-requests', [
+                PermissionRequestController::class,
+                'index'
+            ])->name('employee.permission-requests.index');
+
+
+            Route::get('/permission-requests/create', [
+                PermissionRequestController::class,
+                'create'
+            ])->name('employee.permission-requests.create');
+
+
+            Route::post('/permission-requests', [
+                PermissionRequestController::class,
+                'store'
+            ])->name('employee.permission-requests.store');
         });
 });
 

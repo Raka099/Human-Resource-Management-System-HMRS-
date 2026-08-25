@@ -24,7 +24,7 @@ class LeaveRequestController extends Controller
             ->get();
 
         return view(
-            'leave_requests.index',
+            'employee.leave_requests.index',
             compact(
                 'employee',
                 'leaveRequests'
@@ -39,7 +39,7 @@ class LeaveRequestController extends Controller
         abort_unless($employee, 403);
 
         return view(
-            'leave_requests.create',
+            'employee.leave_requests.create',
             compact('employee')
         );
     }

@@ -31,6 +31,12 @@
             Pengajuan Cuti
         </a>
 
+        <a
+            href="{{ route('employee.permission-requests.index') }}"
+            class="btn-primary"
+        >
+            Pengajuan Izin
+        </a>
 
 </div>
 
