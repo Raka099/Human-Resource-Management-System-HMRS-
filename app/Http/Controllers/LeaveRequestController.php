@@ -80,7 +80,7 @@ class LeaveRequestController extends Controller
         ]);
 
         return redirect()
-            ->route('leave-requests.index')
+            ->route('employee.leave-requests.index')
             ->with(
                 'success',
                 'Pengajuan cuti berhasil dikirim.'

@@ -21,7 +21,7 @@
 
 
         <form
-            action="{{ route('leave-requests.store') }}"
+            action="{{ route('employee.leave-requests.store') }}"
             method="POST"
         >
 
@@ -113,7 +113,7 @@
                 </button>
 
                 <a
-                    href="{{ route('leave-requests.index') }}"
+                    href="{{ route('employee.leave-requests.index') }}"
                     class="btn-primary"
                 >
                     Kembali

@@ -30,7 +30,7 @@
             </div>
 
             <a
-                href="{{ route('leave-requests.create') }}"
+                href="{{ route('employee.leave-requests.create') }}"
                 class="btn-primary"
             >
                 + Ajukan Cuti
