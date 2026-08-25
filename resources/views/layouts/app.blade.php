@@ -467,11 +467,33 @@
                 <a href="{{ route('applicants.index') }}">
                     Data Pelamar
                 </a>
+
                 <a
                     href="{{ route('reports.employees.index') }}"
                     class="sidebar-link"
                 >
                     <span>Laporan Karyawan</span>
+                </a>
+
+                 <a
+                    href="{{ route('reports.leave.index') }}"
+                    class="sidebar-link"
+                >
+                    Pengajuan Cuti
+                </a>
+
+                <a
+                    href="{{ route('reports.permission.index') }}"
+                    class="sidebar-link"
+                >
+                    Pengajuan Izin
+                </a>
+
+                <a
+                    href="{{ route('reports.overtime.index') }}"
+                    class="sidebar-link"
+                >
+                    Pengajuan Lembur
                 </a>
 
 

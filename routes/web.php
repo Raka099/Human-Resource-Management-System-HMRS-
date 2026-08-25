@@ -15,6 +15,7 @@ use App\Http\Controllers\OvertimeRequestController;
 use App\Http\Controllers\ManagerApprovalController;
 use App\Http\Controllers\EmployeeReportController;
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -187,6 +188,35 @@ Route::middleware(['auth'])->group(function () {
                 EmployeeReportController::class,
                 'index'
             ])->name('reports.employees.index');
+
+            Route::get('/reports', [
+                EmployeeReportController::class,
+                'dashboard'
+            ])->name('reports.dashboard');
+
+
+            Route::get('/reports/employees', [
+                EmployeeReportController::class,
+                'index'
+            ])->name('reports.employees.index');
+
+
+            Route::get('/reports/leave', [
+                EmployeeReportController::class,
+                'leave'
+            ])->name('reports.leave.index');
+
+
+            Route::get('/reports/permission', [
+                EmployeeReportController::class,
+                'permission'
+            ])->name('reports.permission.index');
+
+
+            Route::get('/reports/overtime', [
+                EmployeeReportController::class,
+                'overtime'
+            ])->name('reports.overtime.index');
         });
 
     Route::middleware('role:Karyawan')
