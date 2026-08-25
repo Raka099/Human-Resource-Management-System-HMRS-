@@ -467,6 +467,12 @@
                 <a href="{{ route('applicants.index') }}">
                     Data Pelamar
                 </a>
+                <a
+                    href="{{ route('reports.employees.index') }}"
+                    class="sidebar-link"
+                >
+                    <span>Laporan Karyawan</span>
+                </a>
 
 
             @elseif(auth()->user()->role->role_name === 'Manager')

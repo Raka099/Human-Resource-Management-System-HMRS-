@@ -13,6 +13,7 @@ use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\PermissionRequestController;
 use App\Http\Controllers\OvertimeRequestController;
 use App\Http\Controllers\ManagerApprovalController;
+use App\Http\Controllers\EmployeeReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -181,6 +182,11 @@ Route::middleware(['auth'])->group(function () {
                 'employees.contracts',
                 ContractController::class
             )->except(['show']);
+
+            Route::get('/reports/employees', [
+                EmployeeReportController::class,
+                'index'
+            ])->name('reports.employees.index');
         });
 
     Route::middleware('role:Karyawan')

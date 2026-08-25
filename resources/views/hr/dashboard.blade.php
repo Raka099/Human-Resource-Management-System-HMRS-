@@ -99,6 +99,39 @@
 
     </div>
 
+{{-- =====================================================
+         LAPORAN
+    ====================================================== --}}
+
+    <div
+        class="card"
+        style="
+            margin-top:25px;
+        "
+    >
+
+        <h2 style="
+            color:#8B1E1E;
+            margin-top:0;
+        ">
+            Laporan
+        </h2>
+
+        <p style="
+            margin:10px 0 20px;
+        ">
+            Lihat dan filter laporan data karyawan perusahaan.
+        </p>
+
+        <a
+            href="{{ route('reports.employees.index') }}"
+            class="btn-primary"
+        >
+            Laporan Data Karyawan
+        </a>
+
+    </div>
+
 
     {{-- =====================================================
          GRAPH
