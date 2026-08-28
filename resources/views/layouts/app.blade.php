@@ -27,10 +27,9 @@
             color: #222;
         }
 
-
         /* =====================================================
            NAVBAR
-        ===================================================== */
+        ====================================================== */
 
         .navbar {
             height: 85px;
@@ -71,10 +70,9 @@
             font-size: 14px;
         }
 
-
         /* =====================================================
            LOGOUT
-        ===================================================== */
+        ====================================================== */
 
         .btn-logout {
             background: #D5322F;
@@ -94,20 +92,18 @@
             background: #A8662A;
         }
 
-
         /* =====================================================
            LAYOUT
-        ===================================================== */
+        ====================================================== */
 
         .dashboard-wrapper {
             display: flex;
             min-height: calc(100vh - 85px);
         }
 
-
         /* =====================================================
            SIDEBAR
-        ===================================================== */
+        ====================================================== */
 
         .sidebar {
             width: 245px;
@@ -167,10 +163,27 @@
             color: white;
         }
 
+        /* =====================================================
+           SIDEBAR SECTION
+        ====================================================== */
+
+        .sidebar-section {
+            margin-top: 25px;
+            margin-bottom: 8px;
+
+            padding: 0 12px;
+
+            font-size: 12px;
+            font-weight: bold;
+
+            color: #A8662A;
+
+            text-transform: uppercase;
+        }
 
         /* =====================================================
            CONTENT
-        ===================================================== */
+        ====================================================== */
 
         .main-content {
             flex: 1;
@@ -180,20 +193,18 @@
             min-width: 0;
         }
 
-
         /* =====================================================
            CONTAINER
-        ===================================================== */
+        ====================================================== */
 
         .container {
             max-width: 1400px;
             margin: auto;
         }
 
-
         /* =====================================================
            CARD
-        ===================================================== */
+        ====================================================== */
 
         .card {
             background: white;
@@ -206,10 +217,9 @@
                 0 4px 15px rgba(0,0,0,0.06);
         }
 
-
         /* =====================================================
            BUTTON
-        ===================================================== */
+        ====================================================== */
 
         .btn-primary {
             display: inline-block;
@@ -232,10 +242,9 @@
             background: #8B1E1E;
         }
 
-
         /* =====================================================
            STATISTIC CARD
-        ===================================================== */
+        ====================================================== */
 
         .stat-grid {
             display: grid;
@@ -276,10 +285,9 @@
             margin-top: 8px;
         }
 
-
         /* =====================================================
-           GRAPH SECTION
-        ===================================================== */
+           GRAPH
+        ====================================================== */
 
         .chart-grid {
             display: grid;
@@ -319,10 +327,9 @@
             height: 300px;
         }
 
-
         /* =====================================================
            RESPONSIVE
-        ===================================================== */
+        ====================================================== */
 
         @media (max-width: 1000px) {
 
@@ -336,7 +343,6 @@
             }
 
         }
-
 
         @media (max-width: 700px) {
 
@@ -369,9 +375,7 @@
 
 </head>
 
-
 <body>
-
 
 {{-- =========================================================
     NAVBAR
@@ -382,7 +386,6 @@
     <div class="navbar-brand">
         HRMS
     </div>
-
 
     @auth
 
@@ -395,7 +398,6 @@
             <span class="navbar-role">
                 {{ auth()->user()->role->role_name }}
             </span>
-
 
             <form
                 method="POST"
@@ -428,7 +430,6 @@
 
 <div class="dashboard-wrapper">
 
-
     {{-- =====================================================
          SIDEBAR
     ====================================================== --}}
@@ -439,18 +440,26 @@
             Menu HRMS
         </div>
 
-
         <div class="sidebar-menu">
 
-            <a
-                href="{{ route('dashboard') }}"
-                class="active"
-            >
+            {{-- =================================================
+                 DASHBOARD
+            ================================================== --}}
+
+            <a href="{{ route('dashboard') }}">
                 Dashboard
             </a>
 
 
+            {{-- =================================================
+                 ROLE HR
+            ================================================== --}}
+
             @if(auth()->user()->role->role_name === 'HR')
+
+                <div class="sidebar-section">
+                    Master Data
+                </div>
 
                 <a href="{{ route('departments.index') }}">
                     Department
@@ -468,51 +477,61 @@
                     Data Pelamar
                 </a>
 
-                <a
-                    href="{{ route('reports.employees.index') }}"
-                    class="sidebar-link"
-                >
-                    <span>Laporan Karyawan</span>
+                <div class="sidebar-section">
+                    Approval
+                </div>
+
+                <a href="{{ route('hr.approvals.index') }}">
+                    Approval Pengajuan
                 </a>
 
-                 <a
-                    href="{{ route('reports.leave.index') }}"
-                    class="sidebar-link"
-                >
+                <div class="sidebar-section">
+                    Laporan
+                </div>
+
+                <a href="{{ route('reports.employees.index') }}">
+                    Laporan Karyawan
+                </a>
+
+                <a href="{{ route('reports.leave.index') }}">
                     Pengajuan Cuti
                 </a>
 
-                <a
-                    href="{{ route('reports.permission.index') }}"
-                    class="sidebar-link"
-                >
+                <a href="{{ route('reports.permission.index') }}">
                     Pengajuan Izin
                 </a>
 
-                <a
-                    href="{{ route('reports.overtime.index') }}"
-                    class="sidebar-link"
-                >
+                <a href="{{ route('reports.overtime.index') }}">
                     Pengajuan Lembur
                 </a>
 
 
+            {{-- =================================================
+                 ROLE MANAGER
+            ================================================== --}}
+
             @elseif(auth()->user()->role->role_name === 'Manager')
+
+                <div class="sidebar-section">
+                    Approval
+                </div>
 
                 <a href="{{ route('manager.approvals.index') }}">
                     Approval Pengajuan
                 </a>
 
 
+            {{-- =================================================
+                 ROLE KARYAWAN
+            ================================================== --}}
+
             @elseif(auth()->user()->role->role_name === 'Karyawan')
 
-                <a href="{{ route('employee.dashboard') }}">
-                    Dashboard
-                </a>
+                <div class="sidebar-section">
+                    Pengajuan
+                </div>
 
-                <a href="{{ route('employee.leave-requests.index', [
-                    'employee' => auth()->user()->employee->id
-                ]) }}">
+                <a href="{{ route('employee.leave-requests.index') }}">
                     Pengajuan Cuti
                 </a>
 
@@ -520,13 +539,14 @@
                     Pengajuan Izin
                 </a>
 
-                @if(Route::has('employee.overtime-requests.index'))
+                <a href="{{ route('employee.overtime-requests.index') }}">
+                    Pengajuan Lembur
+                </a>
 
-                    <a href="{{ route('employee.overtime-requests.index') }}">
-                        Pengajuan Lembur
-                    </a>
 
-                @endif
+                <div class="sidebar-section">
+                    Akun
+                </div>
 
                 @if(Route::has('profile.edit'))
 
@@ -535,6 +555,7 @@
                     </a>
 
                 @endif
+
             @endif
 
         </div>
@@ -559,7 +580,6 @@
     @yield('content')
 
 @endauth
-
 
 </body>
 

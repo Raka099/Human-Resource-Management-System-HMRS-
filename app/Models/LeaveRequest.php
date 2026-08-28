@@ -17,6 +17,12 @@ class LeaveRequest extends Model
         'reason',
         'status',
         'approval_note',
+        'manager_status',
+        'manager_note',
+        'manager_approved_at',
+        'hr_status',
+        'hr_note',
+        'hr_approved_at',
     ];
 
     protected $casts = [

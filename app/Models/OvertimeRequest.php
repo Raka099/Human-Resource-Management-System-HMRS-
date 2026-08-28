@@ -20,6 +20,13 @@ class OvertimeRequest extends Model
         'status',
         'manager_note',
         'approved_at',
+        'manager_status',
+        'manager_note',
+        'manager_approved_at',
+
+        'hr_status',
+        'hr_note',
+        'hr_approved_at',
     ];
 
     protected function casts(): array

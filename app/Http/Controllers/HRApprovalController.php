@@ -7,11 +7,11 @@ use App\Models\PermissionRequest;
 use App\Models\OvertimeRequest;
 use Illuminate\Http\Request;
 
-class ManagerApprovalController extends Controller
+class HRApprovalController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | Dashboard Approval Manager
+    | Dashboard Approval HR
     |--------------------------------------------------------------------------
     */
 
@@ -21,11 +21,13 @@ class ManagerApprovalController extends Controller
         |--------------------------------------------------------------------------
         | CUTI
         |--------------------------------------------------------------------------
-        | Manager hanya melihat pengajuan yang belum diproses Manager.
+        | HR hanya melihat pengajuan yang sudah disetujui Manager
+        | dan belum diproses HR.
         */
 
         $leaveRequests = LeaveRequest::with('employee')
-            ->where('manager_status', 'Pending')
+            ->where('manager_status', 'Approved')
+            ->where('hr_status', 'Pending')
             ->latest()
             ->get();
 
@@ -37,7 +39,8 @@ class ManagerApprovalController extends Controller
         */
 
         $permissionRequests = PermissionRequest::with('employee')
-            ->where('manager_status', 'Pending')
+            ->where('manager_status', 'Approved')
+            ->where('hr_status', 'Pending')
             ->latest()
             ->get();
 
@@ -49,13 +52,14 @@ class ManagerApprovalController extends Controller
         */
 
         $overtimeRequests = OvertimeRequest::with('employee')
-            ->where('manager_status', 'Pending')
+            ->where('manager_status', 'Approved')
+            ->where('hr_status', 'Pending')
             ->latest()
             ->get();
 
 
         return view(
-            'manager.approvals.index',
+            'hr.approvals.index',
             compact(
                 'leaveRequests',
                 'permissionRequests',
@@ -67,7 +71,7 @@ class ManagerApprovalController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | Approval Cuti
+    | Approval Cuti HR
     |--------------------------------------------------------------------------
     */
 
@@ -89,61 +93,40 @@ class ManagerApprovalController extends Controller
         ]);
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Jika Manager Approve
-        |--------------------------------------------------------------------------
-        */
-
         if ($validated['status'] === 'Approved') {
 
             $leaveRequest->update([
-                'manager_status' => 'Approved',
-
-                'manager_note' =>
-                    $validated['note'] ?? null,
-
-                'manager_approved_at' =>
-                    now(),
+                'hr_status' => 'Approved',
+                'hr_note' => $validated['note'] ?? null,
+                'hr_approved_at' => now(),
+                'status' => 'Approved',
             ]);
-
 
             return back()->with(
                 'success',
-                'Pengajuan cuti berhasil disetujui Manager dan diteruskan ke HR.'
+                'Pengajuan cuti berhasil disetujui HR.'
             );
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Jika Manager Reject
-        |--------------------------------------------------------------------------
-        */
-
         $leaveRequest->update([
-            'manager_status' => 'Rejected',
-
-            'manager_note' =>
-                $validated['note'] ?? null,
-
-            'manager_approved_at' =>
-                now(),
-
+            'hr_status' => 'Rejected',
+            'hr_note' => $validated['note'] ?? null,
+            'hr_approved_at' => now(),
             'status' => 'Rejected',
         ]);
 
 
         return back()->with(
             'success',
-            'Pengajuan cuti ditolak Manager.'
+            'Pengajuan cuti ditolak HR.'
         );
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | Approval Izin
+    | Approval Izin HR
     |--------------------------------------------------------------------------
     */
 
@@ -165,61 +148,40 @@ class ManagerApprovalController extends Controller
         ]);
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Jika Manager Approve
-        |--------------------------------------------------------------------------
-        */
-
         if ($validated['status'] === 'Approved') {
 
             $permissionRequest->update([
-                'manager_status' => 'Approved',
-
-                'manager_note' =>
-                    $validated['note'] ?? null,
-
-                'manager_approved_at' =>
-                    now(),
+                'hr_status' => 'Approved',
+                'hr_note' => $validated['note'] ?? null,
+                'hr_approved_at' => now(),
+                'status' => 'Approved',
             ]);
-
 
             return back()->with(
                 'success',
-                'Pengajuan izin berhasil disetujui Manager dan diteruskan ke HR.'
+                'Pengajuan izin berhasil disetujui HR.'
             );
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Jika Manager Reject
-        |--------------------------------------------------------------------------
-        */
-
         $permissionRequest->update([
-            'manager_status' => 'Rejected',
-
-            'manager_note' =>
-                $validated['note'] ?? null,
-
-            'manager_approved_at' =>
-                now(),
-
+            'hr_status' => 'Rejected',
+            'hr_note' => $validated['note'] ?? null,
+            'hr_approved_at' => now(),
             'status' => 'Rejected',
         ]);
 
 
         return back()->with(
             'success',
-            'Pengajuan izin ditolak Manager.'
+            'Pengajuan izin ditolak HR.'
         );
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | Approval Lembur
+    | Approval Lembur HR
     |--------------------------------------------------------------------------
     */
 
@@ -241,54 +203,33 @@ class ManagerApprovalController extends Controller
         ]);
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Jika Manager Approve
-        |--------------------------------------------------------------------------
-        */
-
         if ($validated['status'] === 'Approved') {
 
             $overtimeRequest->update([
-                'manager_status' => 'Approved',
-
-                'manager_note' =>
-                    $validated['note'] ?? null,
-
-                'manager_approved_at' =>
-                    now(),
+                'hr_status' => 'Approved',
+                'hr_note' => $validated['note'] ?? null,
+                'hr_approved_at' => now(),
+                'status' => 'Approved',
             ]);
-
 
             return back()->with(
                 'success',
-                'Pengajuan lembur berhasil disetujui Manager dan diteruskan ke HR.'
+                'Pengajuan lembur berhasil disetujui HR.'
             );
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Jika Manager Reject
-        |--------------------------------------------------------------------------
-        */
-
         $overtimeRequest->update([
-            'manager_status' => 'Rejected',
-
-            'manager_note' =>
-                $validated['note'] ?? null,
-
-            'manager_approved_at' =>
-                now(),
-
+            'hr_status' => 'Rejected',
+            'hr_note' => $validated['note'] ?? null,
+            'hr_approved_at' => now(),
             'status' => 'Rejected',
         ]);
 
 
         return back()->with(
             'success',
-            'Pengajuan lembur ditolak Manager.'
+            'Pengajuan lembur ditolak HR.'
         );
     }
 }

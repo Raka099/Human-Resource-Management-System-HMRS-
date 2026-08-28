@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Approval Pengajuan')
+@section('title', 'Approval HR')
 
 @section('content')
 
@@ -9,15 +9,16 @@
     <div class="card">
 
         <h1 style="color:#8B1E1E;">
-            Approval Pengajuan
+            Approval HR
         </h1>
 
-        <p style="margin-top:10px;">
-            Kelola pengajuan karyawan yang menunggu persetujuan.
+        <p>
+            Pengajuan yang telah disetujui Manager dan menunggu persetujuan HR.
         </p>
 
 
-        {{-- SUCCESS MESSAGE --}}
+        {{-- SUCCESS --}}
+
         @if(session('success'))
 
             <div style="
@@ -33,7 +34,8 @@
         @endif
 
 
-        {{-- ERROR MESSAGE --}}
+        {{-- ERROR --}}
+
         @if($errors->any())
 
             <div style="
@@ -58,7 +60,7 @@
 
 
         {{-- =====================================================
-             PENGAJUAN CUTI
+             CUTI
         ====================================================== --}}
 
         <h2 style="
@@ -94,13 +96,26 @@
                     {{ $leave->reason }}
                 </p>
 
+                <p>
+                    <strong>
+                        Status Manager:
+                    </strong>
 
-                {{-- FORM CUTI --}}
+                    <span style="
+                        background:#A8662A;
+                        color:white;
+                        padding:5px 10px;
+                        border-radius:15px;
+                    ">
+                        Approved
+                    </span>
+                </p>
+
 
                 <form
                     action="{{ route(
-                        'manager.approvals.leave',
-                        $leave->id
+                        'hr.approvals.leave',
+                        $leave
                     ) }}"
                     method="POST"
                 >
@@ -111,7 +126,7 @@
 
                     <textarea
                         name="note"
-                        placeholder="Catatan Manager"
+                        placeholder="Catatan HR"
                         rows="3"
                         style="
                             width:100%;
@@ -121,42 +136,31 @@
                     ></textarea>
 
 
-                    <div style="
-                        display:flex;
-                        gap:10px;
-                    ">
-
-                        {{-- APPROVE --}}
-
-                        <button
-                            type="submit"
-                            name="status"
-                            value="Approved"
-                            class="btn-primary"
-                        >
-                            Approve
-                        </button>
+                    <button
+                        type="submit"
+                        name="status"
+                        value="Approved"
+                        class="btn-primary"
+                    >
+                        Approve
+                    </button>
 
 
-                        {{-- REJECT --}}
-
-                        <button
-                            type="submit"
-                            name="status"
-                            value="Rejected"
-                            style="
-                                background:#D5322F;
-                                color:white;
-                                border:none;
-                                padding:10px 15px;
-                                border-radius:5px;
-                                cursor:pointer;
-                            "
-                        >
-                            Reject
-                        </button>
-
-                    </div>
+                    <button
+                        type="submit"
+                        name="status"
+                        value="Rejected"
+                        style="
+                            background:#D5322F;
+                            color:white;
+                            border:none;
+                            padding:10px 15px;
+                            border-radius:5px;
+                            cursor:pointer;
+                        "
+                    >
+                        Reject
+                    </button>
 
                 </form>
 
@@ -164,8 +168,8 @@
 
         @empty
 
-            <p style="margin-top:15px;">
-                Tidak ada pengajuan cuti.
+            <p>
+                Tidak ada pengajuan cuti yang menunggu approval HR.
             </p>
 
         @endforelse
@@ -173,7 +177,7 @@
 
 
         {{-- =====================================================
-             PENGAJUAN IZIN
+             IZIN
         ====================================================== --}}
 
         <h2 style="
@@ -214,13 +218,24 @@
                     {{ $permission->reason }}
                 </p>
 
+                <p>
+                    <strong>Status Manager:</strong>
 
-                {{-- FORM IZIN --}}
+                    <span style="
+                        background:#A8662A;
+                        color:white;
+                        padding:5px 10px;
+                        border-radius:15px;
+                    ">
+                        Approved
+                    </span>
+                </p>
+
 
                 <form
                     action="{{ route(
-                        'manager.approvals.permission',
-                        $permission->id
+                        'hr.approvals.permission',
+                        $permission
                     ) }}"
                     method="POST"
                 >
@@ -231,7 +246,7 @@
 
                     <textarea
                         name="note"
-                        placeholder="Catatan Manager"
+                        placeholder="Catatan HR"
                         rows="3"
                         style="
                             width:100%;
@@ -241,42 +256,31 @@
                     ></textarea>
 
 
-                    <div style="
-                        display:flex;
-                        gap:10px;
-                    ">
-
-                        {{-- APPROVE --}}
-
-                        <button
-                            type="submit"
-                            name="status"
-                            value="Approved"
-                            class="btn-primary"
-                        >
-                            Approve
-                        </button>
+                    <button
+                        type="submit"
+                        name="status"
+                        value="Approved"
+                        class="btn-primary"
+                    >
+                        Approve
+                    </button>
 
 
-                        {{-- REJECT --}}
-
-                        <button
-                            type="submit"
-                            name="status"
-                            value="Rejected"
-                            style="
-                                background:#D5322F;
-                                color:white;
-                                border:none;
-                                padding:10px 15px;
-                                border-radius:5px;
-                                cursor:pointer;
-                            "
-                        >
-                            Reject
-                        </button>
-
-                    </div>
+                    <button
+                        type="submit"
+                        name="status"
+                        value="Rejected"
+                        style="
+                            background:#D5322F;
+                            color:white;
+                            border:none;
+                            padding:10px 15px;
+                            border-radius:5px;
+                            cursor:pointer;
+                        "
+                    >
+                        Reject
+                    </button>
 
                 </form>
 
@@ -284,8 +288,8 @@
 
         @empty
 
-            <p style="margin-top:15px;">
-                Tidak ada pengajuan izin.
+            <p>
+                Tidak ada pengajuan izin yang menunggu approval HR.
             </p>
 
         @endforelse
@@ -293,7 +297,7 @@
 
 
         {{-- =====================================================
-             PENGAJUAN LEMBUR
+             LEMBUR
         ====================================================== --}}
 
         <h2 style="
@@ -319,19 +323,7 @@
 
                 <p>
                     Tanggal:
-
-                    @if($overtime->overtime_date)
-
-                        {{ \Carbon\Carbon::parse(
-                            $overtime->overtime_date
-                        )->format('d/m/Y') }}
-
-                    @else
-
-                        -
-
-                    @endif
-
+                    {{ $overtime->overtime_date->format('d/m/Y') }}
                 </p>
 
                 <p>
@@ -346,13 +338,24 @@
                     {{ $overtime->reason }}
                 </p>
 
+                <p>
+                    <strong>Status Manager:</strong>
 
-                {{-- FORM LEMBUR --}}
+                    <span style="
+                        background:#A8662A;
+                        color:white;
+                        padding:5px 10px;
+                        border-radius:15px;
+                    ">
+                        Approved
+                    </span>
+                </p>
+
 
                 <form
                     action="{{ route(
-                        'manager.approvals.overtime',
-                        $overtime->id
+                        'hr.approvals.overtime',
+                        $overtime
                     ) }}"
                     method="POST"
                 >
@@ -363,7 +366,7 @@
 
                     <textarea
                         name="note"
-                        placeholder="Catatan Manager"
+                        placeholder="Catatan HR"
                         rows="3"
                         style="
                             width:100%;
@@ -373,42 +376,31 @@
                     ></textarea>
 
 
-                    <div style="
-                        display:flex;
-                        gap:10px;
-                    ">
-
-                        {{-- APPROVE --}}
-
-                        <button
-                            type="submit"
-                            name="status"
-                            value="Approved"
-                            class="btn-primary"
-                        >
-                            Approve
-                        </button>
+                    <button
+                        type="submit"
+                        name="status"
+                        value="Approved"
+                        class="btn-primary"
+                    >
+                        Approve
+                    </button>
 
 
-                        {{-- REJECT --}}
-
-                        <button
-                            type="submit"
-                            name="status"
-                            value="Rejected"
-                            style="
-                                background:#D5322F;
-                                color:white;
-                                border:none;
-                                padding:10px 15px;
-                                border-radius:5px;
-                                cursor:pointer;
-                            "
-                        >
-                            Reject
-                        </button>
-
-                    </div>
+                    <button
+                        type="submit"
+                        name="status"
+                        value="Rejected"
+                        style="
+                            background:#D5322F;
+                            color:white;
+                            border:none;
+                            padding:10px 15px;
+                            border-radius:5px;
+                            cursor:pointer;
+                        "
+                    >
+                        Reject
+                    </button>
 
                 </form>
 
@@ -416,8 +408,8 @@
 
         @empty
 
-            <p style="margin-top:15px;">
-                Tidak ada pengajuan lembur.
+            <p>
+                Tidak ada pengajuan lembur yang menunggu approval HR.
             </p>
 
         @endforelse

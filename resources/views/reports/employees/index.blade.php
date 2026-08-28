@@ -8,7 +8,7 @@
 
     {{-- HEADER --}}
 
-    <div class="card">
+    <div class="card ">
 
         <h1 style="
             color:#8B1E1E;
@@ -215,8 +215,11 @@
                 justify-content:space-between;
                 align-items:center;
                 margin-bottom:15px;
+                gap:15px;
             "
         >
+
+            {{-- JUDUL --}}
 
             <div>
 
@@ -238,6 +241,26 @@
                     karyawan
                 </p>
 
+            </div>
+        </div>
+
+
+            {{-- TOMBOL GENERATE LAPORAN --}}
+
+            <div
+                style="
+                    display:flex;
+                    gap:10px;
+                    flex-wrap:wrap;
+                "
+            >
+
+                <a
+                    href="{{ route('reports.employees.excel', request()->query()) }}"
+                    class="btn-primary"
+                >
+                    📊 Generate Excel
+                </a>
             </div>
 
         </div>

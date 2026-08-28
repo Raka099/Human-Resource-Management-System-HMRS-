@@ -108,19 +108,29 @@
 
                             @if($permission->status === 'Pending')
 
-                                <span style="color:#A8662A;">
+                                <span style="background:#F4D66D;
+                                        padding:6px 10px;
+                                        border-radius:6px;">
                                     Pending
                                 </span>
 
                             @elseif($permission->status === 'Approved')
 
-                                <span style="color:#2E7D32;">
+                                <span style="background:#8B1E1E;
+                                        color:white;
+                                        padding:6px 10px;
+                                        border-radius:6px;
+                                    ">
                                     Approved
                                 </span>
 
                             @else
 
-                                <span style="color:#D5322F;">
+                                <span style="
+                                        background:#D5322F;
+                                        color:white;
+                                        padding:6px 10px;
+                                        border-radius:6px;">
                                     Rejected
                                 </span>
 

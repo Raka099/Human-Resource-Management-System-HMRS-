@@ -14,6 +14,7 @@ use App\Http\Controllers\PermissionRequestController;
 use App\Http\Controllers\OvertimeRequestController;
 use App\Http\Controllers\ManagerApprovalController;
 use App\Http\Controllers\EmployeeReportController;
+use App\Http\Controllers\ReportController;
 
 
 Route::get('/', function () {
@@ -184,39 +185,58 @@ Route::middleware(['auth'])->group(function () {
                 ContractController::class
             )->except(['show']);
 
-            Route::get('/reports/employees', [
-                EmployeeReportController::class,
-                'index'
-            ])->name('reports.employees.index');
-
             Route::get('/reports', [
                 EmployeeReportController::class,
                 'dashboard'
             ])->name('reports.dashboard');
 
-
             Route::get('/reports/employees', [
                 EmployeeReportController::class,
                 'index'
             ])->name('reports.employees.index');
-
 
             Route::get('/reports/leave', [
                 EmployeeReportController::class,
                 'leave'
             ])->name('reports.leave.index');
 
-
             Route::get('/reports/permission', [
                 EmployeeReportController::class,
                 'permission'
             ])->name('reports.permission.index');
 
-
             Route::get('/reports/overtime', [
                 EmployeeReportController::class,
                 'overtime'
             ])->name('reports.overtime.index');
+
+            Route::get('/reports/employees/excel', [
+                ReportController::class,
+                'employeesExcel'
+            ])->name('reports.employees.excel');
+
+            Route::get('/approvals', [
+                \App\Http\Controllers\HRApprovalController::class,
+                'index'
+            ])->name('hr.approvals.index');
+
+
+            Route::patch('/approvals/leave/{leaveRequest}', [
+                \App\Http\Controllers\HRApprovalController::class,
+                'approveLeave'
+            ])->name('hr.approvals.leave');
+
+
+            Route::patch('/approvals/permission/{permissionRequest}', [
+                \App\Http\Controllers\HRApprovalController::class,
+                'approvePermission'
+            ])->name('hr.approvals.permission');
+
+
+            Route::patch('/approvals/overtime/{overtimeRequest}', [
+                \App\Http\Controllers\HRApprovalController::class,
+                'approveOvertime'
+            ])->name('hr.approvals.overtime');
         });
 
     Route::middleware('role:Karyawan')
