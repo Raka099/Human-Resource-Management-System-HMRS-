@@ -18,7 +18,7 @@ use App\Http\Controllers\ReportController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -117,7 +117,7 @@ Route::middleware(['auth'])->group(function () {
             ])->name('manager.approvals.permission');
 
 
-            /*
+        /*
         |--------------------------------------------------------------------------
         | Approval Lembur
         |--------------------------------------------------------------------------
@@ -127,6 +127,17 @@ Route::middleware(['auth'])->group(function () {
                 ManagerApprovalController::class,
                 'approveOvertime'
             ])->name('manager.approvals.overtime');
+
+
+        //     Route::get('/employees', [
+        //         EmployeeReportController::class,
+        //         'managerEmployees'
+        //     ])->name('manager.employees.index');
+
+        //     Route::get('/employees/export', [
+        //         EmployeeReportController::class,
+        //         'export'
+        //     ])->name('manager.employees.export');
         });
 
     /*

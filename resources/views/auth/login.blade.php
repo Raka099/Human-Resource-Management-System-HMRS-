@@ -1,4 +1,3 @@
-```blade
 <!doctype html>
 <html lang="id">
 
