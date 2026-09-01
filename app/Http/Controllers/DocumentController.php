@@ -16,7 +16,7 @@ class DocumentController extends Controller
         $employee->load('documents');
 
         return view(
-            'documents.index',
+            'hr.documents.index',
             compact('employee')
         );
     }

@@ -97,13 +97,13 @@
             </div> --}}
 
             {{-- Forgot Password --}}
-            @if (Route::has('password.request'))
+            {{-- @if (Route::has('password.request'))
                 <div class="forgot-password">
                     <a href="{{ route('password.request') }}">
                         Lupa password?
                     </a>
                 </div>
-            @endif
+            @endif --}}
 
             {{-- Login Button --}}
             <button

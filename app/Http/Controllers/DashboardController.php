@@ -9,6 +9,7 @@ use App\Models\Contract;
 use App\Models\LeaveRequest;
 use App\Models\PermissionRequest;
 use App\Models\OvertimeRequest;
+use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -56,25 +57,133 @@ class DashboardController extends Controller
 
     public function manager()
     {
-        $employeeCount = Employee::count();
+        $manager = Auth::user();
 
-        $leaveCount = LeaveRequest::count();
+        /*
+    |--------------------------------------------------------------------------
+    | Cari data employee milik Manager
+    |--------------------------------------------------------------------------
+    */
 
-        $permissionCount = PermissionRequest::count();
+        $managerEmployee = Employee::where(
+            'user_id',
+            $manager->id
+        )->first();
 
-        $overtimeCount = OvertimeRequest::count();
+        /*
+    |--------------------------------------------------------------------------
+    | Pastikan Manager terhubung dengan Employee
+    |--------------------------------------------------------------------------
+    */
+
+        abort_unless(
+            $managerEmployee,
+            403,
+            'Data Manager belum terhubung dengan data karyawan.'
+        );
+
+        $departmentId = $managerEmployee->department_id;
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Data Department Manager
+    |--------------------------------------------------------------------------
+    */
+
+        $department = Department::find($departmentId);
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Jumlah Karyawan Department
+    |--------------------------------------------------------------------------
+    */
+
+        $employeeCount = Employee::where(
+            'department_id',
+            $departmentId
+        )->count();
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Pengajuan Cuti Pending
+    |--------------------------------------------------------------------------
+    */
+
+        $pendingLeave = LeaveRequest::whereHas(
+            'employee',
+            function ($query) use ($departmentId) {
+
+                $query->where(
+                    'department_id',
+                    $departmentId
+                );
+            }
+        )
+            ->where('manager_status', 'Pending')
+            ->count();
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Pengajuan Izin Pending
+    |--------------------------------------------------------------------------
+    */
+
+        $pendingPermission = PermissionRequest::whereHas(
+            'employee',
+            function ($query) use ($departmentId) {
+
+                $query->where(
+                    'department_id',
+                    $departmentId
+                );
+            }
+        )
+            ->where('manager_status', 'Pending')
+            ->count();
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Pengajuan Lembur Pending
+    |--------------------------------------------------------------------------
+    */
+
+        $pendingOvertime = OvertimeRequest::whereHas(
+            'employee',
+            function ($query) use ($departmentId) {
+
+                $query->where(
+                    'department_id',
+                    $departmentId
+                );
+            }
+        )
+            ->where('manager_status', 'Pending')
+            ->count();
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Return Dashboard Manager
+    |--------------------------------------------------------------------------
+    */
 
         return view(
             'manager.dashboard',
             compact(
+                'managerEmployee',
+                'department',
                 'employeeCount',
-                'leaveCount',
-                'permissionCount',
-                'overtimeCount'
+                'pendingLeave',
+                'pendingPermission',
+                'pendingOvertime'
             )
         );
     }
-
 
     /*
     |--------------------------------------------------------------------------

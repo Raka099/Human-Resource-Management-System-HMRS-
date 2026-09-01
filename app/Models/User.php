@@ -10,12 +10,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\Department;
+use App\Models\Employee;
 
 #[Fillable([
     'name',
     'email',
     'password',
-    'role_id'
+    'role_id',
+    'department_id'
 ])]
 #[Hidden([
     'password',
@@ -42,4 +45,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Employee::class);
     }
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+    
 }

@@ -520,6 +520,22 @@
                     Approval Pengajuan
                 </a>
 
+                <div class="sidebar-section">
+                    Data & Laporan
+                </div>
+
+                <a href="{{ route('manager.employees.index') }}">
+                    Data Karyawan
+                </a>
+
+                {{-- <div class="sidebar-section">
+                    Laporan
+                </div>
+
+                <a href="{{ route('manager.employees.export') }}">
+                    Generate Excel Karyawan
+                </a> --}}
+
 
             {{-- =================================================
                  ROLE KARYAWAN

@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Applicant;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\View\View;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Position;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class ApplicantController extends Controller
 {
@@ -188,11 +192,12 @@ class ApplicantController extends Controller
             abort(403, 'Pelamar belum berstatus Diterima.');
         }
 
+
         $departments = Department::orderBy('department_name')->get();
         $positions = Position::orderBy('position_name')->get();
 
         return view(
-            'applicants.generate-employee',
+            'hr.applicants.generate-employee',
             compact(
                 'applicant',
                 'departments',
@@ -206,11 +211,31 @@ class ApplicantController extends Controller
         Applicant $applicant
     ): RedirectResponse {
 
+        /*
+    |--------------------------------------------------------------------------
+    | Pastikan Pelamar Sudah Diterima
+    |--------------------------------------------------------------------------
+    */
+
         if ($applicant->status !== 'Diterima') {
             abort(403, 'Pelamar belum berstatus Diterima.');
         }
 
+        if (User::where('email', $applicant->email)->exists()) {
+            return back()
+                ->withErrors([
+                    'email' => 'Email pelamar sudah memiliki akun login.'
+                ])
+                ->withInput();
+        }
+        /*
+    |--------------------------------------------------------------------------
+    | Validasi
+    |--------------------------------------------------------------------------
+    */
+
         $validated = $request->validate([
+
             'employee_number' => [
                 'required',
                 'string',
@@ -237,25 +262,113 @@ class ApplicantController extends Controller
                 'required',
                 'in:Active,Inactive',
             ],
+
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
         ]);
 
-        Employee::create([
-            'employee_number' => $validated['employee_number'],
-            'full_name' => $applicant->full_name,
-            'email' => $applicant->email,
-            'phone' => $applicant->phone,
-            'address' => $applicant->address,
-            'join_date' => $validated['join_date'],
-            'department_id' => $validated['department_id'],
-            'position_id' => $validated['position_id'],
-            'employment_status' => $validated['employment_status'],
-        ]);
+
+        /*
+    |--------------------------------------------------------------------------
+    | Cari Role Karyawan
+    |--------------------------------------------------------------------------
+    */
+
+        $employeeRole = Role::where(
+            'role_name',
+            'Karyawan'
+        )->firstOrFail();
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Buat User + Employee
+    |--------------------------------------------------------------------------
+    */
+
+        DB::transaction(function () use (
+            $validated,
+            $applicant,
+            $employeeRole
+        ) {
+
+            /*
+        |----------------------------------------------------------------------
+        | Buat akun User
+        |----------------------------------------------------------------------
+        */
+
+            $user = User::create([
+
+                'name' => $applicant->full_name,
+
+                'email' => $applicant->email,
+
+                'password' => Hash::make(
+                    $validated['password']
+                ),
+
+                'role_id' => $employeeRole->id,
+
+            ]);
+
+
+            /*
+        |----------------------------------------------------------------------
+        | Buat data Employee
+        |----------------------------------------------------------------------
+        */
+
+            Employee::create([
+
+                'user_id' => $user->id,
+
+                'employee_number' =>
+                $validated['employee_number'],
+
+                'full_name' =>
+                $applicant->full_name,
+
+                'email' =>
+                $applicant->email,
+
+                'phone' =>
+                $applicant->phone,
+
+                'address' =>
+                $applicant->address,
+
+                'join_date' =>
+                $validated['join_date'],
+
+                'department_id' =>
+                $validated['department_id'],
+
+                'position_id' =>
+                $validated['position_id'],
+
+                'employment_status' =>
+                $validated['employment_status'],
+
+            ]);
+        });
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | Selesai
+    |--------------------------------------------------------------------------
+    */
 
         return redirect()
             ->route('employees.index')
             ->with(
                 'success',
-                'Pelamar berhasil digenerate menjadi karyawan.'
+                'Pelamar berhasil digenerate menjadi karyawan dan akun login berhasil dibuat.'
             );
     }
 

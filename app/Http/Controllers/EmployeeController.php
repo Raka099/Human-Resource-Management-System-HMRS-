@@ -185,12 +185,20 @@ class EmployeeController extends Controller
 
         $positions = Position::orderBy('position_name')->get();
 
+        $roles = Role::whereIn(
+            'role_name',
+            ['Karyawan', 'Manager']
+        )
+            ->orderBy('role_name')
+            ->get();
+
         return view(
             'employees.edit',
             compact(
                 'employee',
                 'departments',
-                'positions'
+                'positions',
+                'roles'
             )
         );
     }
@@ -252,19 +260,89 @@ class EmployeeController extends Controller
                 'exists:positions,id',
             ],
 
+            'role_id' => [
+                'required',
+                'exists:roles,id',
+            ],
+
             'employment_status' => [
                 'required',
                 'in:Active,Inactive',
             ],
         ]);
 
-        $employee->update($validated);
+
+        DB::transaction(function () use (
+            $validated,
+            $employee
+        ) {
+
+            /*
+        |--------------------------------------------------------------------------
+        | Update Data Employee
+        |--------------------------------------------------------------------------
+        */
+
+            $employee->update([
+                'employee_number' =>
+                $validated['employee_number'],
+
+                'full_name' =>
+                $validated['full_name'],
+
+                'email' =>
+                $validated['email'],
+
+                'phone' =>
+                $validated['phone'] ?? null,
+
+                'address' =>
+                $validated['address'] ?? null,
+
+                'birth_date' =>
+                $validated['birth_date'] ?? null,
+
+                'join_date' =>
+                $validated['join_date'],
+
+                'department_id' =>
+                $validated['department_id'],
+
+                'position_id' =>
+                $validated['position_id'],
+
+                'employment_status' =>
+                $validated['employment_status'],
+            ]);
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | Update Role User
+        |--------------------------------------------------------------------------
+        */
+
+            if ($employee->user) {
+
+                $employee->user->update([
+                    'name' =>
+                    $validated['full_name'],
+
+                    'email' =>
+                    $validated['email'],
+
+                    'role_id' =>
+                    $validated['role_id'],
+                ]);
+            }
+        });
+
 
         return redirect()
             ->route('employees.index')
             ->with(
                 'success',
-                'Data karyawan berhasil diperbarui.'
+                'Data karyawan dan role berhasil diperbarui.'
             );
     }
 

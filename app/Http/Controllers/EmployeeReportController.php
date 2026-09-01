@@ -9,6 +9,8 @@ use App\Models\PermissionRequest;
 use App\Models\OvertimeRequest;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Exports\EmployeesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeReportController extends Controller
 {
@@ -50,17 +52,16 @@ class EmployeeReportController extends Controller
                     'like',
                     "%{$search}%"
                 )
-                ->orWhere(
-                    'full_name',
-                    'like',
-                    "%{$search}%"
-                )
-                ->orWhere(
-                    'email',
-                    'like',
-                    "%{$search}%"
-                );
-
+                    ->orWhere(
+                        'full_name',
+                        'like',
+                        "%{$search}%"
+                    )
+                    ->orWhere(
+                        'email',
+                        'like',
+                        "%{$search}%"
+                    );
             });
         }
 
@@ -129,12 +130,11 @@ class EmployeeReportController extends Controller
                         'like',
                         "%{$search}%"
                     )
-                    ->orWhere(
-                        'employee_number',
-                        'like',
-                        "%{$search}%"
-                    );
-
+                        ->orWhere(
+                            'employee_number',
+                            'like',
+                            "%{$search}%"
+                        );
                 }
             );
         }
@@ -204,12 +204,11 @@ class EmployeeReportController extends Controller
                         'like',
                         "%{$search}%"
                     )
-                    ->orWhere(
-                        'employee_number',
-                        'like',
-                        "%{$search}%"
-                    );
-
+                        ->orWhere(
+                            'employee_number',
+                            'like',
+                            "%{$search}%"
+                        );
                 }
             );
         }
@@ -279,12 +278,11 @@ class EmployeeReportController extends Controller
                         'like',
                         "%{$search}%"
                     )
-                    ->orWhere(
-                        'employee_number',
-                        'like',
-                        "%{$search}%"
-                    );
-
+                        ->orWhere(
+                            'employee_number',
+                            'like',
+                            "%{$search}%"
+                        );
                 }
             );
         }
@@ -397,6 +395,62 @@ class EmployeeReportController extends Controller
                 'overtimePending',
                 'overtimeApproved',
                 'overtimeRejected'
+            )
+        );
+    }
+    public function export(Request $request)
+    {
+        return Excel::download(
+            new EmployeesExport($request),
+            'laporan-data-karyawan.xlsx'
+        );
+    }
+
+    public function managerEmployees(Request $request)
+    {
+        $employees = Employee::with([
+            'department',
+            'position'
+        ])
+            ->when($request->search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('full_name', 'like', "%{$search}%")
+                        ->orWhere(
+                            'employee_number',
+                            'like',
+                            "%{$search}%"
+                        )
+                        ->orWhere(
+                            'email',
+                            'like',
+                            "%{$search}%"
+                        );
+                });
+            })
+            ->when($request->department_id, function ($query, $id) {
+                $query->where('department_id', $id);
+            })
+            ->when($request->employment_status, function ($query, $status) {
+                $query->where(
+                    'employment_status',
+                    $status
+                );
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+
+        $departments = Department::orderBy(
+            'department_name'
+        )->get();
+
+
+        return view(
+            'manager.employees.index',
+            compact(
+                'employees',
+                'departments'
             )
         );
     }

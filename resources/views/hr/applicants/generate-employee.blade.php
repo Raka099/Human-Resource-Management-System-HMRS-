@@ -305,6 +305,58 @@
 
             </select>
 
+            {{-- Password Akun --}}
+            <div style="margin-top:20px;">
+
+                <label>
+                    Password Login
+                </label>
+
+                <input
+                    type="password"
+                    name="password"
+                    required
+                    minlength="8"
+                    style="
+                        width:100%;
+                        padding:12px;
+                        margin:8px 0 15px;
+                        border:1px solid #ccc;
+                        border-radius:7px;
+                    "
+                >
+
+                @error('password')
+                    <p style="color:#D5322F;">
+                        {{ $message }}
+                    </p>
+                @enderror
+
+            </div>
+
+
+            {{-- Konfirmasi Password --}}
+            <div style="margin-top:5px;">
+
+                <label>
+                    Konfirmasi Password
+                </label>
+
+                <input
+                    type="password"
+                    name="password_confirmation"
+                    required
+                    minlength="8"
+                    style="
+                        width:100%;
+                        padding:12px;
+                        margin:8px 0 20px;
+                        border:1px solid #ccc;
+                        border-radius:7px;
+                    "
+                >
+
+            </div>
 
             <button
                 type="submit"

@@ -304,6 +304,50 @@
                 </p>
             @enderror
 
+            {{-- Role --}}
+            <label>
+                Role
+            </label>
+
+            <select
+                name="role_id"
+                required
+                style="
+                    width:100%;
+                    padding:12px;
+                    margin:8px 0 15px;
+                    border:1px solid #ccc;
+                    border-radius:7px;
+                "
+            >
+
+                <option value="">
+                    -- Pilih Role --
+                </option>
+
+                @foreach($roles as $role)
+
+                    <option
+                        value="{{ $role->id }}"
+                        @selected(
+                            old(
+                                'role_id',
+                                $employee->user?->role_id
+                            ) == $role->id
+                        )
+                    >
+                        {{ $role->role_name }}
+                    </option>
+
+                @endforeach
+
+            </select>
+
+            @error('role_id')
+                <p style="color:#D5322F;">
+                    {{ $message }}
+                </p>
+            @enderror
 
             {{-- Status Kepegawaian --}}
             <label>

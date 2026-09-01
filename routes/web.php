@@ -15,6 +15,8 @@ use App\Http\Controllers\OvertimeRequestController;
 use App\Http\Controllers\ManagerApprovalController;
 use App\Http\Controllers\EmployeeReportController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ManagerEmployeeController;
+use App\Http\Controllers\ProfileController;
 
 
 Route::get('/', function () {
@@ -83,6 +85,18 @@ Route::middleware(['auth'])->group(function () {
 
             /*
         |--------------------------------------------------------------------------
+        | Data Karyawan Department Manager
+        |--------------------------------------------------------------------------
+        */
+
+            Route::get('/employees', [
+                ManagerEmployeeController::class,
+                'index'
+            ])->name('manager.employees.index');
+
+
+            /*
+        |--------------------------------------------------------------------------
         | Approval Pengajuan
         |--------------------------------------------------------------------------
         */
@@ -93,23 +107,11 @@ Route::middleware(['auth'])->group(function () {
             ])->name('manager.approvals.index');
 
 
-            /*
-        |--------------------------------------------------------------------------
-        | Approval Cuti
-        |--------------------------------------------------------------------------
-        */
-
             Route::patch('/approvals/leave/{leaveRequest}', [
                 ManagerApprovalController::class,
                 'approveLeave'
             ])->name('manager.approvals.leave');
 
-
-            /*
-        |--------------------------------------------------------------------------
-        | Approval Izin
-        |--------------------------------------------------------------------------
-        */
 
             Route::patch('/approvals/permission/{permissionRequest}', [
                 ManagerApprovalController::class,
@@ -117,34 +119,21 @@ Route::middleware(['auth'])->group(function () {
             ])->name('manager.approvals.permission');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Approval Lembur
-        |--------------------------------------------------------------------------
-        */
-
             Route::patch('/approvals/overtime/{overtimeRequest}', [
                 ManagerApprovalController::class,
                 'approveOvertime'
             ])->name('manager.approvals.overtime');
 
+            //     Route::get('/employees', [
+            //         EmployeeReportController::class,
+            //         'managerEmployees'
+            //     ])->name('manager.employees.index');
 
-        //     Route::get('/employees', [
-        //         EmployeeReportController::class,
-        //         'managerEmployees'
-        //     ])->name('manager.employees.index');
-
-        //     Route::get('/employees/export', [
-        //         EmployeeReportController::class,
-        //         'export'
-        //     ])->name('manager.employees.export');
+            //     Route::get('/employees/export', [
+            //         EmployeeReportController::class,
+            //         'export'
+            //     ])->name('manager.employees.export');
         });
-
-    /*
-    |--------------------------------------------------------------------------
-    | Karyawan
-    |--------------------------------------------------------------------------
-    */
 
     Route::middleware('role:HR')
         ->prefix('hr')

@@ -6,6 +6,7 @@ use App\Models\LeaveRequest;
 use App\Models\PermissionRequest;
 use App\Models\OvertimeRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ManagerApprovalController extends Controller
 {
@@ -17,42 +18,33 @@ class ManagerApprovalController extends Controller
 
     public function index()
     {
-        /*
-        |--------------------------------------------------------------------------
-        | CUTI
-        |--------------------------------------------------------------------------
-        | Manager hanya melihat pengajuan yang belum diproses Manager.
-        */
+        $manager = Auth::user();
+
+        $departmentId = $manager->employee->department_id;
 
         $leaveRequests = LeaveRequest::with('employee')
             ->where('manager_status', 'Pending')
+            ->whereHas('employee', function ($query) use ($departmentId) {
+                $query->where('department_id', $departmentId);
+            })
             ->latest()
             ->get();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | IZIN
-        |--------------------------------------------------------------------------
-        */
 
         $permissionRequests = PermissionRequest::with('employee')
             ->where('manager_status', 'Pending')
+            ->whereHas('employee', function ($query) use ($departmentId) {
+                $query->where('department_id', $departmentId);
+            })
             ->latest()
             ->get();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | LEMBUR
-        |--------------------------------------------------------------------------
-        */
 
         $overtimeRequests = OvertimeRequest::with('employee')
             ->where('manager_status', 'Pending')
+            ->whereHas('employee', function ($query) use ($departmentId) {
+                $query->where('department_id', $departmentId);
+            })
             ->latest()
             ->get();
-
 
         return view(
             'manager.approvals.index',
@@ -101,10 +93,10 @@ class ManagerApprovalController extends Controller
                 'manager_status' => 'Approved',
 
                 'manager_note' =>
-                    $validated['note'] ?? null,
+                $validated['note'] ?? null,
 
                 'manager_approved_at' =>
-                    now(),
+                now(),
             ]);
 
 
@@ -125,10 +117,10 @@ class ManagerApprovalController extends Controller
             'manager_status' => 'Rejected',
 
             'manager_note' =>
-                $validated['note'] ?? null,
+            $validated['note'] ?? null,
 
             'manager_approved_at' =>
-                now(),
+            now(),
 
             'status' => 'Rejected',
         ]);
@@ -177,10 +169,10 @@ class ManagerApprovalController extends Controller
                 'manager_status' => 'Approved',
 
                 'manager_note' =>
-                    $validated['note'] ?? null,
+                $validated['note'] ?? null,
 
                 'manager_approved_at' =>
-                    now(),
+                now(),
             ]);
 
 
@@ -201,10 +193,10 @@ class ManagerApprovalController extends Controller
             'manager_status' => 'Rejected',
 
             'manager_note' =>
-                $validated['note'] ?? null,
+            $validated['note'] ?? null,
 
             'manager_approved_at' =>
-                now(),
+            now(),
 
             'status' => 'Rejected',
         ]);
@@ -253,10 +245,10 @@ class ManagerApprovalController extends Controller
                 'manager_status' => 'Approved',
 
                 'manager_note' =>
-                    $validated['note'] ?? null,
+                $validated['note'] ?? null,
 
                 'manager_approved_at' =>
-                    now(),
+                now(),
             ]);
 
 
@@ -277,10 +269,10 @@ class ManagerApprovalController extends Controller
             'manager_status' => 'Rejected',
 
             'manager_note' =>
-                $validated['note'] ?? null,
+            $validated['note'] ?? null,
 
             'manager_approved_at' =>
-                now(),
+            now(),
 
             'status' => 'Rejected',
         ]);
