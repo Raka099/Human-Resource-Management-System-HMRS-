@@ -16,6 +16,18 @@
             Menampilkan data karyawan berdasarkan department Manager.
         </p>
 
+        <a
+            href="{{ route('manager.employees.export') }}"
+            class="btn-primary"
+            style="
+                display:inline-block;
+                margin-bottom:20px;
+                text-decoration:none;
+            "
+        >
+            Generate Excel
+        </a>
+
         @if(session('success'))
 
             <div style="

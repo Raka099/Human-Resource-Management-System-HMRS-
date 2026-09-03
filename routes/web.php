@@ -124,15 +124,21 @@ Route::middleware(['auth'])->group(function () {
                 'approveOvertime'
             ])->name('manager.approvals.overtime');
 
-            //     Route::get('/employees', [
-            //         EmployeeReportController::class,
-            //         'managerEmployees'
-            //     ])->name('manager.employees.index');
+            Route::get(
+                '/manager/employees',
+                [
+                    ManagerEmployeeController::class,
+                    'managerEmployees'
+                ]
+            )->name('manager.employees');
 
-            //     Route::get('/employees/export', [
-            //         EmployeeReportController::class,
-            //         'export'
-            //     ])->name('manager.employees.export');
+            Route::get(
+                '/manager/employees/export',
+                [
+                    ManagerEmployeeController::class,
+                    'exportEmployees'
+                ]
+            )->name('manager.employees.export');
         });
 
     Route::middleware('role:HR')

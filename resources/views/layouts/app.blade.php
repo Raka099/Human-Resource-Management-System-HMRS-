@@ -505,6 +505,17 @@
                     Pengajuan Lembur
                 </a>
 
+                                <div class="sidebar-section">
+                    Akun
+                </div>
+
+                @if(Route::has('profile.edit'))
+
+                    <a href="{{ route('profile.edit') }}">
+                        Profil
+                    </a>
+                @endif
+
 
             {{-- =================================================
                  ROLE MANAGER
@@ -528,13 +539,16 @@
                     Data Karyawan
                 </a>
 
-                {{-- <div class="sidebar-section">
-                    Laporan
+                <div class="sidebar-section">
+                    Akun
                 </div>
 
-                <a href="{{ route('manager.employees.export') }}">
-                    Generate Excel Karyawan
-                </a> --}}
+                @if(Route::has('profile.edit'))
+
+                    <a href="{{ route('profile.edit') }}">
+                        Profil
+                    </a>
+                @endif
 
 
             {{-- =================================================
